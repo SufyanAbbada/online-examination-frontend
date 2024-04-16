@@ -1,5 +1,5 @@
 import validations from "../utils/inputValidations";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./styles.css";
@@ -7,12 +7,13 @@ import "./styles.css";
 function SignUp() {
   const [name, setName] = useState("Sufyan Abbada");
   const [nameError, setNameError] = useState("");
-  const [email, setEmail] = useState("sufyan@test.com");
+  const [email, setEmail] = useState("test@test.com");
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("test1234*");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("test1234*");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [role, setRole] = useState("student");
 
   const navigate = useNavigate();
 
@@ -36,18 +37,17 @@ function SignUp() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ name, email, password }),
+          body: JSON.stringify({ name, email, password, role }),
         }
       );
 
       try {
+        const data = await response.json();
         if (response.status !== 200) {
-          const error = await response.json();
-          return toast(error.response);
+          return toast(data.response);
         } else {
-          const data = await response.json();
-          console.log(data.response);
-          toast("Successfully Registered you the system");
+          toast("Initial Registration in the system is Successful");
+          toast(data.response);
           return setTimeout(() => {
             navigate("/login");
           }, 1000);
@@ -68,6 +68,7 @@ function SignUp() {
             type="text"
             name="name"
             id="name"
+            autoComplete=""
             value={name}
             required
             onChange={(e) => setName(e.target.value)}
@@ -120,6 +121,21 @@ function SignUp() {
           <small id="confirmPasswordError" className="text-muted block">
             {confirmPasswordError}
           </small>
+        </div>
+
+        <div>
+          <label htmlFor="role">Role: </label>
+          <select
+            name="role"
+            id="role"
+            required
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
+          </select>
         </div>
 
         <button className="bg-teal-700 p-2 rounded-xl" onClick={signUp}>

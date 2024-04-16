@@ -2,12 +2,11 @@ import validations from "../utils/inputValidations";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import getEmailFromToken from "../utils/getEmailFromToken";
 
 function Login() {
-  const [email, setEmail] = useState("sufyan@test.com");
+  const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [password, setPassword] = useState("test1234*");
+  const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   const navigate = useNavigate();
@@ -42,10 +41,11 @@ function Login() {
           return toast(error.response);
         } else {
           const data = await response.json();
-          sessionStorage.setItem("token", data.response);
-          toast("Signed In");
+          sessionStorage.setItem("token", data.token);
+          toast(`Signed In as ${data.name}`);
           return setTimeout(() => {
-            navigate("/");
+            if (data.role === "admin") return navigate("/admin");
+            else return navigate("/");
           }, 1000);
         }
       } catch (err) {
