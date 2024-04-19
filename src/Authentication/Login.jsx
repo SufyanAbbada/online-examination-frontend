@@ -2,16 +2,20 @@ import validations from "../utils/inputValidations";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { login } from "./userSlice";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("admin@admin.com");
   const [emailError, setEmailError] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("admin1234*");
   const [passwordError, setPasswordError] = useState("");
+
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
-  const login = async () => {
+  const handleLogin = async () => {
     if (
       await validations(
         null,
@@ -42,6 +46,13 @@ function Login() {
         } else {
           const data = await response.json();
           sessionStorage.setItem("token", data.token);
+          dispatch(
+            login({
+              userName: data.name,
+              userEmail: data.email,
+              userRole: data.role,
+            })
+          );
           toast(`Signed In as ${data.name}`);
           return setTimeout(() => {
             if (data.role === "admin") return navigate("/admin");
@@ -87,7 +98,7 @@ function Login() {
             {passwordError}
           </small>
         </div>
-        <button className="bg-fuchsia-500 p-2 rounded-xl" onClick={login}>
+        <button className="bg-fuchsia-500 p-2 rounded-xl" onClick={handleLogin}>
           Login
         </button>
       </div>
