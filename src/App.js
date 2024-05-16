@@ -1,7 +1,8 @@
 import SignUp from "./Authentication/SignUp";
 import Login from "./Authentication/Login";
 import VerificationSplash from "./Authentication/VerificationSplash";
-import Admin from "./Authentication/Admin";
+import Admin from "./Roles/Admin";
+import Teacher from "./Roles/Teacher";
 import Footer from "./Components/Footer";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -18,6 +19,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/verify" element={<VerificationSplash />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/teacher" element={<Teacher />} />
+          <Route path="/questionnaire" element={<Admin />} />
         </Routes>
       </Router>
       <Footer />
